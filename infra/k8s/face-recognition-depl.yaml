@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: face-recognition-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: face-recognition-service
+  template:
+    metadata:
+      labels:
+        app: face-recognition-service
+    spec:
+      containers:
+        - name: face-recognition-service
+          image: levikobi/face-recognition-service
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://face-recognition-mongo-service:27017/persons'
+            - name: REDIS_HOST
+              value: 'face-recognition-redis-service:6379'
+            - name: NUMBER_OF_BEST_MATCHES
+              value: '3'
+            - name: MAX_AMOUNT_OF_PERSONS
+              value: '10000'
+            - name: NUMBER_OF_WORKERS
+              value: '10'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: face-recognition-service
+spec:
+  selector:
+    app: face-recognition-service
+  ports:
+    - name: face-recognition-service
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

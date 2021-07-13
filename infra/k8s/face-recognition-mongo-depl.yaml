@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: face-recognition-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: face-recognition-mongo
+  template:
+    metadata:
+      labels:
+        app: face-recognition-mongo
+    spec:
+      containers:
+        - name: face-recognition-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: face-recognition-mongo-service
+spec:
+  selector:
+    app: face-recognition-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
