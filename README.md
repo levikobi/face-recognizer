@@ -12,7 +12,9 @@ by dotproduct action.
 ### Installing
 
 * Add the following line to your hosts file:
+```
   127.0.0.1 face-recognizer.dev
+```
 * cd into your projects folder
 * git clone https://github.com/levikobi/face-recognizer.git
 
