@@ -1,17 +1,13 @@
 # face-recognizer
 
-Simple overview of use/purpose.
-
-## Description
-
-An in-depth paragraph about your project and overview of use.
+This face recognition service get features (fixed size vector of 256) of a face which represent attruibtes of
+the face.
+The service returns as an output 3 (configurable number) best matches persons that simillar to this given
+vector.
+The face recognition is being done by comparing a single vector to all other exists vectors in the database
+by dotproduct action.
 
 ## Getting Started
-
-### Dependencies
-
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
 
 ### Installing
 
