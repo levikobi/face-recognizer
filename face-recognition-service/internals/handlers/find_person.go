@@ -10,6 +10,7 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"sync"
 )
 
 func (this *Api) FindPerson(res http.ResponseWriter, req *http.Request) {
@@ -47,11 +48,36 @@ func (this *Api) getTopMatches(receivedPerson *models.Person, persons *[]models.
 	topMatches := &models.Heap{}
 	heap.Init(topMatches)
 
+	var wg sync.WaitGroup
+	var mu = &sync.Mutex{}
+
+	numJobs := len(*persons)
+	jobs := make(chan models.Person, numJobs)
+	wg.Add(numJobs)
+
 	featuresString := fmt.Sprint(receivedPerson)
-	for _, currPerson := range *persons {
-		angle := this.calculateAngle(receivedPerson, currPerson, featuresString)
-		this.updateTopMatches(currPerson, angle, topMatches)
+
+	for w := 1; w <= this.config.NumberOfWorkers; w++ {
+		go func (w int) {
+			for currPerson := range jobs {
+				angle := this.calculateAngle(receivedPerson, currPerson, featuresString)
+
+				mu.Lock()
+				this.updateTopMatches(currPerson, angle, topMatches)
+				mu.Unlock()
+
+				wg.Done()
+			}
+		}(w)
 	}
+
+	for _, currPerson := range *persons {
+		jobs <- currPerson
+	}
+
+	close(jobs)
+	wg.Wait()
+
 	return topMatches
 }
 
