@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package protos;
+option go_package = "github.com/levikobi/face-recognizer/grpc-schemas/protos/face-recognition-service";
+
+service FaceRecognition {
+  rpc AddPerson(AddPersonRequest) returns (AddPersonResponse) {};
+  rpc FindPerson(FindPersonRequest) returns (FindPersonResponse) {};
+}
+
+message AddPersonRequest {
+  Person person = 1;
+}
+
+message AddPersonResponse {
+  enum Status {
+    SUCCESS = 0;
+    FAILURE = 1;
+  }
+}
+
+message FindPersonRequest {
+  repeated float features = 1;
+}
+
+message FindPersonResponse {
+  repeated Person persons = 1;
+}
+
+message Person {
+  repeated float features = 1;
+  string name = 2;
+}
