@@ -13,9 +13,6 @@ import (
 func (this *Api) AddPerson(res http.ResponseWriter, req *http.Request) {
 	log.Println("Handle AddPerson request")
 
-
-
-
 	numOfPeople, _ := this.persons.Count(context.Background(), json.Encoder{})
 	if numOfPeople >= this.config.MaxAmountOfPersons {
 		http.Error(res, "Cannot add more people", http.StatusMethodNotAllowed)

@@ -15,13 +15,13 @@ COPY . .
 RUN CGO_ENABLED=0 go test -v
 
 # Build the Go app
-RUN go build -o go-sample-app -mod=vendor .
+RUN go build -o ./out/go-sample-app -mod=vendor .
 
 # Start fresh from a smaller image
 FROM alpine:3.14
 RUN apk add ca-certificates
 
-COPY --from=build_base /tmp/go-sample-app/go-sample-app /app/go-sample-app
+COPY --from=build_base /tmp/go-sample-app/out/go-sample-app /app/go-sample-app
 
 # This container exposes port 8080 to the outside world
 EXPOSE 8080
