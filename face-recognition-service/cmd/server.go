@@ -1,11 +1,10 @@
-package main
+package cmd
 
 import (
 	"context"
 	"face-recognition-service/internals/business"
 	"face-recognition-service/internals/models"
 	"fmt"
-	"google.golang.org/grpc"
 	pb "grpc-schemas/golang/face-recognition/protos"
 )
 
@@ -14,10 +13,16 @@ func main(){
 }
 
 type Server struct {
-	service business.FaceRecognitionService
+	pb.UnimplementedFaceRecognitionServer
+
+	service *business.FaceRecognitionService
 }
 
-func (this *Server) AddPerson(ctx context.Context, in *pb.AddPersonRequest, opts ...grpc.CallOption) (*pb.AddPersonResponse, error) {
+func NewServer(service *business.FaceRecognitionService) *Server {
+	return &Server{service: service}
+}
+
+func (this *Server) AddPerson(ctx context.Context, in *pb.AddPersonRequest) (*pb.AddPersonResponse, error) {
 	var person models.Person
 	models.FromProto(&person, in.Person)
 
@@ -28,7 +33,7 @@ func (this *Server) AddPerson(ctx context.Context, in *pb.AddPersonRequest, opts
 	return &pb.AddPersonResponse{Status: pb.AddPersonResponse_SUCCESS}, nil
 }
 
-func (this *Server) FindPerson(ctx context.Context, in *pb.FindPersonRequest, opts ...grpc.CallOption) (*pb.FindPersonResponse, error) {
+func (this *Server) FindPerson(ctx context.Context, in *pb.FindPersonRequest) (*pb.FindPersonResponse, error) {
 	var person models.Person
 	person.Features = in.Features
 
