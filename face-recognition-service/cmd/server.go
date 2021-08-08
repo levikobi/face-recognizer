@@ -4,13 +4,8 @@ import (
 	"context"
 	"face-recognition-service/internals/business"
 	"face-recognition-service/internals/models"
-	"fmt"
 	pb "grpc-schemas/golang/face-recognition/protos"
 )
-
-func main(){
-	fmt.Println("Hello world")
-}
 
 type Server struct {
 	pb.UnimplementedFaceRecognitionServer

@@ -33,7 +33,11 @@ func main() {
 	}
 
 	// listen for requests
-	gs.Serve(l)
+	go func() {
+		gs.Serve(l)
+	}()
+
+	test_client()
 
 }
 
